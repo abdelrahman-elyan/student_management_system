@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Management System — Alexandria National University</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- ═══════════════════════════════════════════
+     LOGIN PAGE
+═══════════════════════════════════════════ -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="university-badge">🎓</div>
+      <h1>Alexandria National University</h1>
+      <p>Faculty of Computer and Information</p>
+    </div>
+    <h2>Student Management System</h2>
+    
+    <div id="loginError" style="display:none;background:#ffe4e6;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;font-size:14px;color:#b91c1c;margin-bottom:16px;"></div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input class="form-control" id="username" type="text" placeholder="Enter username" autocomplete="username" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-control" id="password" type="password" placeholder="Enter password" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn-primary" id="loginBtn" type="submit" style="width:100%;justify-content:center;padding:12px;font-size:15px;margin-top:8px;">
+        Sign In
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     STUDENT PORTAL (role=student)
+═══════════════════════════════════════════ -->
+<div id="studentPortalApp" style="display:none; flex-direction:row; min-height:100vh;">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">🎓</div>
+        <div class="logo-text"><h2>Student Portal</h2><span>ANU</span></div>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-section-title">My Account</div>
+      <div class="nav-item active" data-portal="student" data-page="sp-dashboard">
+        <span class="nav-icon">📊</span> Dashboard
+      </div>
+      <div class="nav-item" data-portal="student" data-page="sp-courses">
+        <span class="nav-icon">📚</span> My Courses
+      </div>
+      <div class="nav-item" data-portal="student" data-page="sp-enroll">
+        <span class="nav-icon">➕</span> Register Course
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="spUserAvatar">ST</div>
+        <div class="user-details">
+          <span class="user-name" id="spUserName">Student</span>
+          <span class="user-role">student</span>
+        </div>
+      </div>
+      <button class="logout-btn" id="spLogoutBtn"><span>🚪</span> Sign Out</button>
+    </div>
+  </aside>
+  <div class="main-content" style="flex:1">
+    <header class="top-header">
+      <div class="page-title"><h1 id="spPageTitle">Dashboard</h1><p id="spPageSub">My academic overview</p></div>
+      <div class="header-actions"><span style="font-size:13px;color:var(--text-muted)" id="spCurrentDate"></span></div>
+    </header>
+    <div class="content-area">
+      <div id="sp-dashboardPage" class="page-view active"></div>
+      <div id="sp-coursesPage"   class="page-view" style="display:none;"></div>
+      <div id="sp-enrollPage"    class="page-view" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TEACHER PORTAL (role=teacher)
+═══════════════════════════════════════════ -->
+<div id="teacherPortalApp" style="display:none; flex-direction:row; min-height:100vh;">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">👨‍🏫</div>
+        <div class="logo-text"><h2>Teacher Portal</h2><span>ANU</span></div>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-section-title">My Teaching</div>
+      <div class="nav-item active" data-portal="teacher" data-page="tp-dashboard">
+        <span class="nav-icon">📊</span> Dashboard
+      </div>
+      <div class="nav-item" data-portal="teacher" data-page="tp-courses">
+        <span class="nav-icon">📚</span> My Courses
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="tpUserAvatar">TC</div>
+        <div class="user-details">
+          <span class="user-name" id="tpUserName">Teacher</span>
+          <span class="user-role">teacher</span>
+        </div>
+      </div>
+      <button class="logout-btn" id="tpLogoutBtn"><span>🚪</span> Sign Out</button>
+    </div>
+  </aside>
+  <div class="main-content" style="flex:1">
+    <header class="top-header">
+      <div class="page-title"><h1 id="tpPageTitle">Dashboard</h1><p id="tpPageSub">My courses overview</p></div>
+      <div class="header-actions"><span style="font-size:13px;color:var(--text-muted)" id="tpCurrentDate"></span></div>
+    </header>
+    <div class="content-area">
+      <div id="tp-dashboardPage" class="page-view active"></div>
+      <div id="tp-coursesPage"   class="page-view" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ADMIN / STAFF APP
+═══════════════════════════════════════════ -->
+<div id="app" style="display:none; flex-direction:row; min-height:100vh;">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">🎓</div>
+        <div class="logo-text"><h2>Alexandria National University</h2><span>ANU</span></div>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-section-title">Main Menu</div>
+      <div class="nav-item" data-page="dashboard"><span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item" data-page="students"><span class="nav-icon">👥</span> Students</div>
+      <div class="nav-item" data-page="teachers"><span class="nav-icon">👨‍🏫</span> Teachers</div>
+      <div class="nav-item" data-page="courses"><span class="nav-icon">📚</span> Courses</div>
+      <div class="nav-item" data-page="enrollments"><span class="nav-icon">📋</span> Enrollments</div>
+      <div class="nav-section-title">Administration</div>
+      <div class="nav-item" data-page="departments"><span class="nav-icon">🏛️</span> Departments</div>
+      <div class="nav-item" data-page="users"><span class="nav-icon">🔑</span> User Accounts</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="sidebarUserAvatar">AD</div>
+        <div class="user-details">
+          <span class="user-name" id="sidebarUserName">Admin</span>
+          <span class="user-role" id="sidebarUserRole">admin</span>
+        </div>
+      </div>
+      <button class="logout-btn" id="logoutBtn"><span>🚪</span> Sign Out</button>
+    </div>
+  </aside>
+
+  <div class="main-content" style="flex:1">
+    <header class="top-header">
+      <div class="page-title"><h1>Dashboard</h1><p>Overview &amp; statistics</p></div>
+      <div class="header-actions"><span style="font-size:13px;color:var(--text-muted)" id="currentDate"></span></div>
+    </header>
+    <div class="content-area">
+
+      <div id="dashboardPage"   class="page-view active"><div class="page-loading"><div class="loading-spinner"></div><span>Loading...</span></div></div>
+
+      <!-- STUDENTS -->
+      <div id="studentsPage" class="page-view" style="display:none;">
+        <div class="data-card">
+          <div class="data-card-header">
+            <h3>👥 All Students</h3>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+              <div class="search-filter-bar">
+                <input type="text" id="studentsSearch" class="form-control" placeholder="🔍 Search name, ID, email..." style="width:220px;">
+                <select id="studentsFilterDept" class="form-control dept-filter-select" style="width:160px;"><option value="">All Departments</option></select>
+                <select id="studentsFilterStatus" class="form-control" style="width:130px;">
+                  <option value="">All Status</option><option>Active</option><option>Inactive</option><option>Graduated</option><option>Suspended</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="openAddStudentModal()">➕ Add Student</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Student</th><th>Email</th><th>Department</th><th>Gender</th><th>Enrolled</th><th>Status</th><th>Login</th><th>Actions</th></tr></thead>
+              <tbody id="studentsTableBody"><tr><td colspan="8" class="page-loading"><div class="loading-spinner"></div></td></tr></tbody>
+            </table>
+          </div>
+          <div id="studentsPagination" class="pagination"></div>
+        </div>
+      </div>
+
+      <!-- TEACHERS -->
+      <div id="teachersPage" class="page-view" style="display:none;">
+        <div class="data-card">
+          <div class="data-card-header">
+            <h3>👨‍🏫 All Teachers</h3>
+            <button class="btn btn-primary" onclick="openAddTeacherModal()">➕ Add Teacher</button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Teacher</th><th>Email</th><th>Department</th><th>Status</th><th>Role</th><th>Login Account</th><th>Actions</th></tr></thead>
+              <tbody id="teachersTableBody"><tr><td colspan="6" class="page-loading"><div class="loading-spinner"></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- COURSES -->
+      <div id="coursesPage" class="page-view" style="display:none;">
+        <div class="data-card">
+          <div class="data-card-header">
+            <h3>📚 All Courses</h3>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+              <input type="text" id="coursesSearch" class="form-control" placeholder="🔍 Search courses..." style="width:200px;">
+              <select id="coursesFilterDept" class="form-control dept-filter-select" style="width:160px;"><option value="">All Departments</option></select>
+              <button class="btn btn-primary" onclick="openAddCourseModal()">➕ Add Course</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Code</th><th>Course Name</th><th>Department</th><th>Teacher</th><th style="text-align:center">Credits</th><th style="text-align:center">Enrolled</th><th>Actions</th></tr></thead>
+              <tbody id="coursesTableBody"><tr><td colspan="7" class="page-loading"><div class="loading-spinner"></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENROLLMENTS -->
+      <div id="enrollmentsPage" class="page-view" style="display:none;">
+        <div class="data-card">
+          <div class="data-card-header">
+            <h3>📋 All Enrollments</h3>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+              <select id="enrollFilterStatus" class="form-control" style="width:140px;" onchange="State.enrollments.filters.status=this.value; loadEnrollments()">
+                <option value="">All Status</option><option>Enrolled</option><option>Completed</option><option>Dropped</option><option>Failed</option>
+              </select>
+              <button class="btn btn-primary" onclick="openAddEnrollmentModal()">➕ Add Enrollment</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Student</th><th>Course</th><th>Semester</th><th>Grade</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="enrollmentsTableBody"><tr><td colspan="6" class="page-loading"><div class="loading-spinner"></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEPARTMENTS -->
+      <div id="departmentsPage" class="page-view" style="display:none;">
+        <div class="data-card">
+          <div class="data-card-header">
+            <h3>🏛️ Academic Departments</h3>
+            <button class="btn btn-primary" onclick="openAddDeptModal()">➕ Add Department</button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Code</th><th>Name</th><th style="text-align:center">Students</th><th>Actions</th></tr></thead>
+              <tbody id="deptsTableBody"><tr><td colspan="4" class="page-loading"><div class="loading-spinner"></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- USER ACCOUNTS -->
+      <div id="usersPage" class="page-view" style="display:none;">
+        <div class="data-card">
+          <div class="data-card-header">
+            <h3>🔑 User Accounts</h3>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+              <input type="text" id="usersSearch" class="form-control" placeholder="🔍 Search name, username..." style="width:220px;" oninput="usersSearchHandler()">
+              <select id="usersFilterRole" class="form-control" style="width:140px;" onchange="usersRoleFilter()">
+                <option value="">All Roles</option>
+                <option value="admin">Admin</option>
+                <option value="staff">Staff</option>
+                <option value="teacher">Teacher</option>
+                <option value="student">Student</option>
+              </select>
+              <button class="btn btn-primary" onclick="openCreateUserModal()">➕ Create Account</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Full Name</th><th>Username</th><th>Email</th><th>Role</th><th>Linked To</th><th>Created</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr><td colspan="7" class="page-loading"><div class="loading-spinner"></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </div><!-- /main-content -->
+</div><!-- /app -->
+
+<script>
+  document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('spCurrentDate').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('tpCurrentDate').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.querySelectorAll('.page-view').forEach(el => {
+    el.style.display = el.classList.contains('active') ? 'block' : 'none';
+  });
+</script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
