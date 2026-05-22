@@ -127,15 +127,5 @@ student_management_system/
 | 60–64  | D |
 | 0–59   | F |
 
----
-
-## 👥 Team
-*(Fill in your team members here)*
-
-- Student 1: ___________________
-- Student 2: ___________________
-- Student 3: ___________________
-
----
-
+----------------------------------------------------------------------------------
 *Software Engineering Final Project — Academic Year 2024/2025*
